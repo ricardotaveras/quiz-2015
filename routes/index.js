@@ -22,9 +22,4 @@ router.get('/author', function(req, res) {
 	res.render('author', { author: 'Ricardo Taveras' });
 });
 
-// GET Busqueda de pregunta
-router.get('/search', function(req, res) {
-	res.render('quizes/search', {});
-});
-
 module.exports = router;
