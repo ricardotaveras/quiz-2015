@@ -38,6 +38,18 @@ app.use(function(req, res, next) {
   next();
 });
 
+// variable de session auto-logout
+app.use(function (req, res, next) {
+  if (req.session.lastsession && req.session.user) { // Verifica que este logeado y que esista req.session.lastsession
+    if (new Date().getTime() >= req.session.lastsession) { // validamos el tiempo trancurido
+      delete req.session.user; // borramos la session activa
+      res.redirect('/login'); // redirigir a /login
+    }
+  }
+  req.session.lastsession = new Date().getTime() + 0.25*60*1000; // Captura el tiempo de la ultima transaccion
+  next();
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
