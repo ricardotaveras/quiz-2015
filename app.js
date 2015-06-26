@@ -38,6 +38,20 @@ app.use(function(req, res, next) {
   next();
 });
 
+// variable de session auto-logout
+app.use(function (req, res, next) {
+  if (req.session.lastsession) {
+    var transcurrido = new Date().getSeconds() - req.session.lastsession;
+    if (transcurrido >= 120) {
+      res.redirect('/logout');
+    }
+  }
+  console.log('Antes session lastsession: ' + req.session.lastsession);
+  req.session.lastsession = new Date().getSeconds();
+  console.log('Despues session lastsession: ' + req.session.lastsession);
+  next();
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
