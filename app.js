@@ -40,15 +40,13 @@ app.use(function(req, res, next) {
 
 // variable de session auto-logout
 app.use(function (req, res, next) {
-  if (req.session.lastsession) {
-    var transcurrido = new Date().getSeconds() - req.session.lastsession;
-    if (transcurrido >= 120) {
-      res.redirect('/logout');
+  if (req.session.lastsession && req.session.user) { // Verifica que este logeado y que esista req.session.lastsession
+    if (new Date().getTime() >= req.session.lastsession) { // validamos el tiempo trancurido
+      delete req.session.user; // borramos la session activa
+      res.redirect('/login'); // redirigir a /login
     }
   }
-  console.log('Antes session lastsession: ' + req.session.lastsession);
-  req.session.lastsession = new Date().getSeconds();
-  console.log('Despues session lastsession: ' + req.session.lastsession);
+  req.session.lastsession = new Date().getTime() + 2*60*1000; // Captura el tiempo de la ultima transaccion
   next();
 });
 
